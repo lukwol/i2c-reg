@@ -2,39 +2,56 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput, IntSuffix, Lit, Meta, MetaNameValue};
+use syn::export::Span;
+use syn::{parse_macro_input, DeriveInput, IntSuffix, Lit, LitInt, Meta, MetaNameValue};
 
-#[proc_macro_derive(Register, attributes(addr))]
+#[proc_macro_derive(Register, attributes(addr, len))]
 pub fn my_macro(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
     let name = input.ident;
 
-    let addr_attr = &input.attrs[0].parse_meta().unwrap();
-
     let mut addr_lit: Option<u64> = None;
+    let mut len_lit: Option<u64> = None;
 
-    match addr_attr {
-        Meta::NameValue(MetaNameValue {
+    for attr in input.attrs.iter() {
+        if let Ok(Meta::NameValue(MetaNameValue {
             ref ident, ref lit, ..
-        }) if ident == "addr" => {
-            if let Lit::Int(lit) = lit {
-                addr_lit = Some(lit.value());
+        })) = attr.parse_meta()
+        {
+            if ident == "addr" {
+                if let Lit::Int(lit) = lit {
+                    addr_lit = Some(lit.value());
+                }
+            }
+            if ident == "len" {
+                if let Lit::Int(lit) = lit {
+                    len_lit = Some(lit.value())
+                }
             }
         }
-        _ => (),
-    };
+    }
 
-    let addr_int_lit = syn::Lit::Int(syn::LitInt::new(
+    let addr = Lit::Int(LitInt::new(
         addr_lit.unwrap(),
         IntSuffix::U8,
-        syn::export::Span::call_site(),
+        Span::call_site(),
+    ));
+
+    let len = Lit::Int(LitInt::new(
+        len_lit.unwrap(),
+        IntSuffix::U8,
+        Span::call_site(),
     ));
 
     let expanded = quote! {
         impl Register for #name{
-            fn address(&self) -> Address {
-                Address(#addr_int_lit)
+            fn address(&self) -> u8 {
+                #addr
+            }
+
+            fn length(&self) -> u8 {
+                #len
             }
         }
     };

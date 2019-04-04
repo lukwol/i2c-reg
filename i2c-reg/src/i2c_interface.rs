@@ -1,11 +1,10 @@
-use crate::address::Address;
 use crate::hal::blocking::i2c;
 use crate::registers::{I2cReadRegister, I2cWriteRegister};
 
 #[derive(Debug)]
 pub struct I2cInterface<I2C> {
     pub i2c: I2C,
-    pub address: Address,
+    pub address: u8,
 }
 
 impl<I2C> I2cInterface<I2C> {
