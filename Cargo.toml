@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "i2c-reg/",
+    "i2c-reg-derive/",
+]
