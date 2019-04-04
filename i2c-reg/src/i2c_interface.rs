@@ -27,10 +27,6 @@ impl<I2C> I2cInterface<I2C> {
     where
         I2C: i2c::Write<Error = Err>,
     {
-        register.i2c_write()(
-            &mut self.i2c,
-            self.address,
-            value.into(),
-        )
+        register.i2c_write()(&mut self.i2c, self.address, value.into())
     }
 }
