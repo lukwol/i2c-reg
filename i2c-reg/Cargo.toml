@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 embedded-hal = "0.2.2"
+i2c-reg-derive = { version = "0.1", path = "../i2c-reg-derive" }
