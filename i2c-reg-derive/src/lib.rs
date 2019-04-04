@@ -34,19 +34,19 @@ pub fn register(input: TokenStream) -> TokenStream {
 pub fn i2c_read_register(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
-    let (_, len) = addr_len_attrs(input.attrs);
+    let (addr, len) = addr_len_attrs(input.attrs);
 
     let name = input.ident;
 
     let expanded = quote! {
         impl<'a> I2cReadRegister<'a, [u8; #len]> for #name {
-            fn i2c_read<I2C, Err>(&self) -> &Fn(&mut I2C, u8, u8) -> Result<[u8; #len], Err>
+            fn i2c_read<I2C, Err>(&self) -> &Fn(&mut I2C, u8) -> Result<[u8; #len], Err>
             where
                 I2C: i2c::WriteRead<Error = Err>,
             {
-                &|i2c, device_address, reg_address| {
+                &|i2c, device_address| {
                     let mut buff = [0; #len];
-                    i2c.write_read(device_address, &[reg_address], &mut buff)?;
+                    i2c.write_read(device_address, &[#addr], &mut buff)?;
                     Ok(buff)
                 }
             }
@@ -60,19 +60,19 @@ pub fn i2c_read_register(input: TokenStream) -> TokenStream {
 pub fn i2c_write_register(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
-    let (_, len) = addr_len_attrs(input.attrs);
+    let (addr, len) = addr_len_attrs(input.attrs);
 
     let name = input.ident;
 
     let expanded = quote! {
         impl<'a> I2cWriteRegister<'a, [u8; #len]> for #name {
-            fn i2c_write<I2C, Err>(&self) -> &Fn(&mut I2C, u8, u8, [u8; #len]) -> Result<(), Err>
+            fn i2c_write<I2C, Err>(&self) -> &Fn(&mut I2C, u8, [u8; #len]) -> Result<(), Err>
             where
                 I2C: i2c::Write<Error = Err>,
             {
-                &|i2c, device_address, reg_address, value| {
+                &|i2c, device_address, value| {
                     let mut payload = [0; #len + 1];
-                    payload[0] = reg_address;
+                    payload[0] = #addr;
                     for (i, item) in value.iter().enumerate() {
                         payload[i + 1] = *item;
                     }
