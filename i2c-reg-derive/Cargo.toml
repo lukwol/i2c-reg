@@ -5,3 +5,8 @@ authors = ["lukwol <wolanczyk.lukasz@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+syn = "0.15.30"
+quote = "0.6.11"
+
+[lib]
+proc-macro = true
