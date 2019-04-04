@@ -7,4 +7,5 @@ mod i2c_interface;
 mod registers;
 
 pub use i2c_interface::I2cInterface;
+pub use i2c_reg_derive;
 pub use registers::{I2cReadRegister, I2cWriteRegister, Register};

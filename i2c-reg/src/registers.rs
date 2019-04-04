@@ -2,7 +2,7 @@ use crate::hal::blocking::i2c;
 
 pub trait Register {
     fn address(&self) -> u8;
-    fn length(&self) -> u8;
+    fn length(&self) -> usize;
 }
 
 pub trait I2cReadRegister<'a, Raw>: Register {
@@ -28,7 +28,7 @@ macro_rules! reg {
                 $addr
             }
 
-            fn length(&self) -> u8 {
+            fn length(&self) -> usize {
                 $addr
             }
         }

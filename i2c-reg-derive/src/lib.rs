@@ -1,3 +1,5 @@
+#![recursion_limit = "128"]
+
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
@@ -19,8 +21,63 @@ pub fn register(input: TokenStream) -> TokenStream {
                 #addr
             }
 
-            fn length(&self) -> u8 {
+            fn length(&self) -> usize {
                 #len
+            }
+        }
+    };
+
+    TokenStream::from(expanded)
+}
+
+#[proc_macro_derive(I2cReadRegister, attributes(addr, len))]
+pub fn i2c_read_register(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+
+    let (_, len) = addr_len_attrs(input.attrs);
+
+    let name = input.ident;
+
+    let expanded = quote! {
+        impl<'a> I2cReadRegister<'a, [u8; #len]> for #name {
+            fn i2c_read<I2C, Err>(&self) -> &Fn(&mut I2C, u8, u8) -> Result<[u8; #len], Err>
+            where
+                I2C: i2c::WriteRead<Error = Err>,
+            {
+                &|i2c, device_address, reg_address| {
+                    let mut buff = [0; #len];
+                    i2c.write_read(device_address, &[reg_address], &mut buff)?;
+                    Ok(buff)
+                }
+            }
+        }
+    };
+
+    TokenStream::from(expanded)
+}
+
+#[proc_macro_derive(I2cWriteRegister, attributes(addr, len))]
+pub fn i2c_write_register(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+
+    let (_, len) = addr_len_attrs(input.attrs);
+
+    let name = input.ident;
+
+    let expanded = quote! {
+        impl<'a> I2cWriteRegister<'a, [u8; #len]> for #name {
+            fn i2c_write<I2C, Err>(&self) -> &Fn(&mut I2C, u8, u8, [u8; #len]) -> Result<(), Err>
+            where
+                I2C: i2c::Write<Error = Err>,
+            {
+                &|i2c, device_address, reg_address, value| {
+                    let mut payload = [0; #len + 1];
+                    payload[0] = reg_address;
+                    for (i, item) in value.iter().enumerate() {
+                        payload[i + 1] = *item;
+                    }
+                    i2c.write(device_address, &payload)
+                }
             }
         }
     };
@@ -55,7 +112,7 @@ fn addr_len_attrs(attributes: Vec<Attribute>) -> (Lit, Lit) {
     ));
     let len = Lit::Int(LitInt::new(
         len_lit.unwrap(),
-        IntSuffix::U8,
+        IntSuffix::Usize,
         Span::call_site(),
     ));
     (addr, len)
