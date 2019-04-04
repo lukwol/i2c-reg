@@ -10,7 +10,7 @@ pub struct I2cInterface<I2C> {
 impl<I2C> I2cInterface<I2C> {
     pub fn read_register<'a, Raw, Value, Err>(
         &mut self,
-        register: impl I2cReadRegister<'a, Raw>,
+        register: &impl I2cReadRegister<'a, Raw>,
     ) -> Result<Value, Err>
     where
         I2C: i2c::WriteRead<Error = Err>,
@@ -21,7 +21,7 @@ impl<I2C> I2cInterface<I2C> {
 
     pub fn write_register<'a, Raw, Err>(
         &mut self,
-        register: impl I2cWriteRegister<'a, Raw>,
+        register: &impl I2cWriteRegister<'a, Raw>,
         value: impl Into<Raw>,
     ) -> Result<(), Err>
     where
