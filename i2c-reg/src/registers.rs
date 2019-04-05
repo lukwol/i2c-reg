@@ -1,6 +1,8 @@
 use crate::hal::blocking::i2c;
 
 pub trait Register {
+    type Raw;
+
     fn address(&self) -> u8;
     fn length(&self) -> usize;
 }

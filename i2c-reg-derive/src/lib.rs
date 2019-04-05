@@ -17,6 +17,9 @@ pub fn register(input: TokenStream) -> TokenStream {
 
     let expanded = quote! {
         impl Register for #name{
+
+            type Raw = [u8; #len];
+
             fn address(&self) -> u8 {
                 #addr
             }
