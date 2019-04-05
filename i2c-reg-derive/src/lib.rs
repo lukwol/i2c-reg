@@ -42,7 +42,7 @@ pub fn i2c_read_register(input: TokenStream) -> TokenStream {
     let name = input.ident;
 
     let expanded = quote! {
-        impl<'a> I2cReadRegister<'a, [u8; #len]> for #name {
+        impl I2cReadRegister<[u8; #len]> for #name {
             fn i2c_read<I2C, Err>(&self) -> &Fn(&mut I2C, u8) -> Result<[u8; #len], Err>
             where
                 I2C: i2c::WriteRead<Error = Err>,
@@ -68,7 +68,7 @@ pub fn i2c_write_register(input: TokenStream) -> TokenStream {
     let name = input.ident;
 
     let expanded = quote! {
-        impl<'a> I2cWriteRegister<'a, [u8; #len]> for #name {
+        impl I2cWriteRegister<[u8; #len]> for #name {
             fn i2c_write<I2C, Err>(&self) -> &Fn(&mut I2C, u8, [u8; #len]) -> Result<(), Err>
             where
                 I2C: i2c::Write<Error = Err>,
