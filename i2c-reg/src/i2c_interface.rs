@@ -16,7 +16,9 @@ impl<I2C> I2cInterface<I2C> {
         I2C: i2c::WriteRead<Error = Err>,
         Raw: Into<Value>,
     {
-        register.i2c_read(&mut self.i2c, self.address).map(|v| v.into())
+        register
+            .i2c_read(&mut self.i2c, self.address)
+            .map(|v| v.into())
     }
 
     pub fn write_register<Raw, Err>(
