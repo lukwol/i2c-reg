@@ -1,13 +1,25 @@
 use crate::hal::blocking::i2c;
 use crate::registers::{I2cReadRegister, I2cWriteRegister};
 
+/// I2C interface
+/// # Usage
+///
+/// ```
+/// // TODO: write usage
+/// ```
 #[derive(Debug)]
 pub struct I2cInterface<I2C> {
+
+    /// SDA and SCL pins
     pub i2c: I2C,
+
+    /// Slave device address
     pub address: u8,
 }
 
 impl<I2C> I2cInterface<I2C> {
+
+    /// Read bytes from register and map output to `Value`
     pub fn read_register<Raw, Value, Err>(
         &mut self,
         register: &impl I2cReadRegister<Raw>,
@@ -21,6 +33,7 @@ impl<I2C> I2cInterface<I2C> {
             .map(|v| v.into())
     }
 
+    /// Map `value` to bytes and write to register
     pub fn write_register<Raw, Err>(
         &mut self,
         register: &impl I2cWriteRegister<Raw>,
