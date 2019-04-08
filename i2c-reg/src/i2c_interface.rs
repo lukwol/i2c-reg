@@ -53,12 +53,11 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// struct ReadWriteRegister;
 ///
 /// let mut interface = I2cInterface { i2c, address: 0b0110 };
-/// let read_result: Value = interface.read_register(&ReadOnlyRegister).unwrap();
-/// let write_result = interface.write_register(&ReadWriteRegister, value).unwrap();
+/// let read_result: Value = interface.read_register(ReadOnlyRegister).unwrap();
+/// let write_result = interface.write_register(ReadWriteRegister, value).unwrap();
 /// ```
 #[derive(Debug)]
 pub struct I2cInterface<I2C> {
-
     /// SDA and SCL pins
     pub i2c: I2C,
 
@@ -67,11 +66,10 @@ pub struct I2cInterface<I2C> {
 }
 
 impl<I2C> I2cInterface<I2C> {
-
     /// Read bytes from register and map output to `Value`
     pub fn read_register<Raw, Value, Err>(
         &mut self,
-        register: &impl I2cReadRegister<Raw>,
+        register: impl I2cReadRegister<Raw>,
     ) -> Result<Value, Err>
     where
         I2C: i2c::WriteRead<Error = Err>,
@@ -85,7 +83,7 @@ impl<I2C> I2cInterface<I2C> {
     /// Map `value` to bytes and write to register
     pub fn write_register<Raw, Err>(
         &mut self,
-        register: &impl I2cWriteRegister<Raw>,
+        register: impl I2cWriteRegister<Raw>,
         value: impl Into<Raw>,
     ) -> Result<(), Err>
     where
