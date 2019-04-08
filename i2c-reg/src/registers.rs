@@ -14,7 +14,7 @@ pub trait Register {
 
 /// Describes writable I2C register
 pub trait I2cReadRegister<Raw>: Register {
-    /// Read bytes from reagister on slave device with `device_address`
+    /// Read bytes from register on slave device with `device_address`
     fn i2c_read<I2C, Err>(&self, i2c: &mut I2C, device_address: u8) -> Result<Raw, Err>
     where
         I2C: i2c::WriteRead<Error = Err>;
@@ -22,7 +22,7 @@ pub trait I2cReadRegister<Raw>: Register {
 
 /// Describes readable I2C register
 pub trait I2cWriteRegister<Raw>: Register {
-    /// Write bytes to reagister on slave device with `device_address`
+    /// Write bytes to register on slave device with `device_address`
     fn i2c_write<I2C, Err>(&self, i2c: &mut I2C, device_address: u8, raw: Raw) -> Result<(), Err>
     where
         I2C: i2c::Write<Error = Err>;

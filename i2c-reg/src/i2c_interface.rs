@@ -10,11 +10,16 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// # use i2c_reg::*;
 /// # use i2c_reg_derive::*;
 /// #
+/// # static mut REGISTER_CACHE: [u8; 2] = [0, 0];
+/// #
 /// # struct MockI2c;
 /// #
 /// # impl i2c::WriteRead for MockI2c {
 /// #     type Error = ();
 /// #     fn write_read(&mut self, address: u8, bytes: &[u8], buffer: &mut [u8]) -> Result<(), Self::Error> {
+/// #         unsafe {for (i, item) in REGISTER_CACHE.iter().enumerate() {
+/// #             buffer[i] = *item;
+/// #         }}
 /// #         Ok(())
 /// #     }
 /// # }
@@ -23,38 +28,41 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// #     type Error = ();
 /// #
 /// #     fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Self::Error> {
+/// #         unsafe {for (i, item) in bytes.iter().skip(1).enumerate() {
+/// #             unsafe { REGISTER_CACHE[i] = *item; }
+/// #         }}
 /// #         Ok(())
 /// #     }
 /// # }
-/// # struct Value;
-/// #
-/// # impl Into<[u8; 2]> for Value {
-/// #     fn into(self) -> [u8; 2] {
-/// #         [0; 2]
-/// #     }
-/// # }
-/// # impl From<[u8; 6]> for Value {
-/// #     fn from(_: [u8; 6]) -> Self {
-/// #         Value
-/// #     }
-/// # }
-/// #
-/// # let i2c = MockI2c;
-/// # let value = Value;
-/// #
-/// #[derive(Register, I2cReadRegister)]
-/// #[addr = 0b1101]
-/// #[len = 6]
-/// struct ReadOnlyRegister;
-///
 /// #[derive(Register, I2cReadRegister, I2cWriteRegister)]
 /// #[addr = 0b1110]
 /// #[len = 2]
-/// struct ReadWriteRegister;
+/// struct TemperatureRegister;
 ///
+/// type Raw = <TemperatureRegister as Register>::Raw;
+///
+/// #[derive(Debug, PartialEq)]
+/// struct Temperature(u16);
+///
+/// impl Into<Raw> for Temperature {
+///     fn into(self) -> Raw {
+///         [(self.0 >> 8) as u8, self.0 as u8]
+///     }
+/// }
+///
+/// impl From<Raw> for Temperature {
+///     fn from(raw: Raw) -> Self {
+///         Temperature(((raw[0] as u16) << 8) + raw[1] as u16)
+///     }
+/// }
+///
+/// # let i2c = MockI2c;
+/// # let value = Temperature;
+/// #
 /// let mut interface = I2cInterface { i2c, address: 0b0110 };
-/// let read_result: Value = interface.read_register(ReadOnlyRegister).unwrap();
-/// let write_result = interface.write_register(ReadWriteRegister, value).unwrap();
+/// interface.write_register(TemperatureRegister, Temperature(42)).unwrap();
+/// let temperature: Temperature = interface.read_register(TemperatureRegister).unwrap();
+/// assert_eq!(Temperature(42), temperature);
 /// ```
 #[derive(Debug)]
 pub struct I2cInterface<I2C> {
