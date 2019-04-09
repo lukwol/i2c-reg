@@ -57,7 +57,6 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// }
 ///
 /// # let i2c = MockI2c;
-/// # let value = Temperature;
 /// #
 /// let mut interface = I2cInterface { i2c, address: 0b0110 };
 /// interface.write_register(TemperatureRegister, Temperature(42)).unwrap();
