@@ -1,3 +1,5 @@
+//! Traits for describing I2C registers
+
 use crate::hal::blocking::i2c;
 
 // TODO: Add example and compare ImplementedRegister vs DerivedRegister, it should be the same
