@@ -35,8 +35,8 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// #     }
 /// # }
 /// #[derive(Register, I2cReadRegister, I2cWriteRegister)]
-/// #[addr = 0b1110]
-/// #[len = 2]
+/// #[address = 0b1110]
+/// #[size = 2]
 /// struct TemperatureRegister;
 ///
 /// type Raw = <TemperatureRegister as Register>::Raw;

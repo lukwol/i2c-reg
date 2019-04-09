@@ -11,8 +11,8 @@ pub trait Register {
     /// Register address
     fn address(&self) -> u8;
 
-    /// Lenght of bytes that can be read or written to register
-    fn length(&self) -> usize;
+    /// Register number of bytes
+    fn size(&self) -> usize;
 }
 
 /// Describes writable I2C register
