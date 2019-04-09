@@ -6,10 +6,10 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// # Example
 ///
 /// ```
-/// # use embedded_hal::blocking::i2c;
-/// # use i2c_reg::*;
-/// # use i2c_reg_derive::*;
-/// #
+/// use embedded_hal::blocking::i2c;
+/// use i2c_reg::*;
+/// use i2c_reg_derive::*;
+///
 /// # static mut REGISTER_CACHE: [u8; 2] = [0, 0];
 /// #
 /// # struct MockI2c;

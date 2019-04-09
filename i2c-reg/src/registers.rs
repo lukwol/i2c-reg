@@ -6,9 +6,9 @@ use crate::hal::blocking::i2c;
 ///
 /// # Example
 /// ```
-/// # use i2c_reg::Register;
-/// # use i2c_reg_derive::Register;
-/// #
+/// use i2c_reg::Register;
+/// use i2c_reg_derive::Register;
+///
 /// struct BasicRegister;
 ///
 /// impl Register for BasicRegister {
