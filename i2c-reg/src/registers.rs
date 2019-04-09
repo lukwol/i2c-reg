@@ -2,8 +2,39 @@
 
 use crate::hal::blocking::i2c;
 
-// TODO: Add example and compare ImplementedRegister vs DerivedRegister, it should be the same
 /// Describes generic Register
+///
+/// # Example
+/// ```
+/// # use i2c_reg::Register;
+/// # use i2c_reg_derive::Register;
+/// #
+/// struct BasicRegister;
+///
+/// impl Register for BasicRegister {
+///     type Raw = [u8; 6];
+///
+///     fn address(&self) -> u8 {
+///         0b0111
+///     }
+///
+///     fn size(&self) -> usize {
+///         6
+///     }
+/// }
+///
+/// #[derive(Register)]
+/// #[address = 0b0111]
+/// #[size = 6]
+/// struct DerivedBasicRegister;
+///
+/// let raw: <BasicRegister as Register>::Raw = [0; 6];
+/// let derived_raw: <DerivedBasicRegister as Register>::Raw = [0; 6];
+///
+/// assert_eq!(BasicRegister.address(), DerivedBasicRegister.address());
+/// assert_eq!(BasicRegister.size(), DerivedBasicRegister.size());
+/// assert_eq!(raw, derived_raw);
+/// ```
 pub trait Register {
     /// Raw type (bytes) of value read or written to register
     type Raw;
