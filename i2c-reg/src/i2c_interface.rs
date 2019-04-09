@@ -17,9 +17,9 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// # impl i2c::WriteRead for MockI2c {
 /// #     type Error = ();
 /// #     fn write_read(&mut self, address: u8, bytes: &[u8], buffer: &mut [u8]) -> Result<(), Self::Error> {
-/// #         unsafe {for (i, item) in REGISTER_CACHE.iter().enumerate() {
+/// #         for (i, item) in unsafe { REGISTER_CACHE }.iter().enumerate() {
 /// #             buffer[i] = *item;
-/// #         }}
+/// #         }
 /// #         Ok(())
 /// #     }
 /// # }
@@ -28,9 +28,9 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// #     type Error = ();
 /// #
 /// #     fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Self::Error> {
-/// #         unsafe {for (i, item) in bytes.iter().skip(1).enumerate() {
-/// #             unsafe { REGISTER_CACHE[i] = *item; }
-/// #         }}
+/// #         for (i, item) in bytes.iter().skip(1).enumerate() {
+/// #             unsafe { REGISTER_CACHE [i] = *item; }
+/// #         }
 /// #         Ok(())
 /// #     }
 /// # }
