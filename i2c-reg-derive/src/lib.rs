@@ -7,6 +7,12 @@ use quote::quote;
 use syn::export::Span;
 use syn::{parse_macro_input, Attribute, DeriveInput, IntSuffix, Lit, LitInt, Meta, MetaNameValue};
 
+/// Derive Register trait with specific address and length
+///
+/// # Attributes
+///
+/// * `addr` - Register address
+/// * `len` - Register number of bytes
 #[proc_macro_derive(Register, attributes(addr, len))]
 pub fn register(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
@@ -33,6 +39,12 @@ pub fn register(input: TokenStream) -> TokenStream {
     TokenStream::from(expanded)
 }
 
+/// Derive I2cReadRegister to allow reading from register
+///
+/// # Attributes
+///
+/// * `addr` - Register address
+/// * `len` - Register number of bytes
 #[proc_macro_derive(I2cReadRegister, attributes(addr, len))]
 pub fn i2c_read_register(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
@@ -57,6 +69,12 @@ pub fn i2c_read_register(input: TokenStream) -> TokenStream {
     TokenStream::from(expanded)
 }
 
+/// Derive I2cWriteRegister to allow writing to register
+///
+/// # Attributes
+///
+/// * `addr` - Register address
+/// * `len` - Register number of bytes
 #[proc_macro_derive(I2cWriteRegister, attributes(addr, len))]
 pub fn i2c_write_register(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);

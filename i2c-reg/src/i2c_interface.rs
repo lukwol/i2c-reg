@@ -3,7 +3,7 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 
 /// I2C interface
 ///
-/// # Usage
+/// # Example
 ///
 /// ```
 /// # use embedded_hal::blocking::i2c;
@@ -66,7 +66,7 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// ```
 #[derive(Debug)]
 pub struct I2cInterface<I2C> {
-    /// SDA and SCL pins
+    /// Slave device I2C
     pub i2c: I2C,
 
     /// Slave device address

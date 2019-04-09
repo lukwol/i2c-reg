@@ -1,5 +1,6 @@
 use crate::hal::blocking::i2c;
 
+// TODO: Add example and compare ImplementedRegister vs DerivedRegister, it should be the same
 /// Describes generic Register
 pub trait Register {
     /// Raw type (bytes) of value read or written to register
