@@ -1,3 +1,5 @@
+//! Interface for I2C communication.
+
 use crate::hal::blocking::i2c;
 use crate::registers::{I2cReadRegister, I2cWriteRegister};
 
