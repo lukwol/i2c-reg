@@ -11,13 +11,13 @@ use crate::hal::blocking::i2c;
 ///
 /// #[derive(Register)]
 /// #[address = 0b0111]
-/// #[size = 6]
+/// #[size = 8]
 /// struct BasicRegister;
 ///
-/// let _: <BasicRegister as Register>::Raw = [0; 6];
+/// let _: <BasicRegister as Register>::Raw = [0; 8];
 ///
 /// assert_eq!(0b0111, BasicRegister.address());
-/// assert_eq!(6, BasicRegister.size());
+/// assert_eq!(8, BasicRegister.size());
 /// ```
 pub trait Register {
     /// Raw type (bytes) of value read from/written to register

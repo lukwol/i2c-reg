@@ -12,13 +12,16 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// use i2c_reg::*;
 /// use i2c_reg_derive::*;
 ///
-/// # static mut REGISTER_CACHE: [u8; 1] = [0];
+/// # static mut REGISTER_CACHE: [u8; 4] = [0; 4];
+/// #
 /// # struct MockI2c;
 /// #
 /// # impl i2c::WriteRead for MockI2c {
 /// #     type Error = ();
 /// #     fn write_read(&mut self, address: u8, bytes: &[u8], buffer: &mut [u8]) -> Result<(), Self::Error> {
-/// #         buffer[0] = unsafe { REGISTER_CACHE[0] };
+/// #         for (i, item) in unsafe { REGISTER_CACHE }.iter().enumerate() {
+/// #             buffer[i] = *item;
+/// #         }
 /// #         Ok(())
 /// #     }
 /// # }
@@ -27,49 +30,50 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 /// #     type Error = ();
 /// #
 /// #     fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Self::Error> {
-/// #         unsafe { REGISTER_CACHE[0] = bytes[0]; }
+/// #         for (i, item) in bytes.iter().skip(1).enumerate() {
+/// #             unsafe { REGISTER_CACHE [i] = *item; }
+/// #         }
 /// #         Ok(())
 /// #     }
 /// # }
 /// #[derive(Register, I2cReadRegister, I2cWriteRegister)]
-/// #[address = 0b1010]
-/// #[size = 1]
+/// #[address = 0b1110]
+/// #[size = 4]
 /// struct ExampleRegister;
 ///
 /// type Raw = <ExampleRegister as Register>::Raw;
 ///
 /// #[derive(Debug, PartialEq)]
-/// enum Value {
-///     Option0 = 0b00,
-///     Option1 = 0b01,
-///     Option2 = 0b10,
-///     Option3 = 0b11,
-/// }
+/// struct Value(u32);
 ///
 /// impl Into<Raw> for Value {
 ///     fn into(self) -> Raw {
-///         [self as u8]
+///         [
+///             (self.0 >> 24) as u8,
+///             (self.0 >> 16) as u8,
+///             (self.0 >> 8) as u8,
+///             self.0 as u8,
+///         ]
 ///     }
 /// }
 ///
 /// impl From<Raw> for Value {
 ///     fn from(raw: Raw) -> Self {
-///         match raw[0] & 0b11 {
-///             0b00 => Value::Option0,
-///             0b01 => Value::Option1,
-///             0b10 => Value::Option2,
-///             0b11 => Value::Option3,
-///             _ => panic!("Impossible happened")
-///         }
+///         Value(
+///             ((raw[0] as u32) << 24)
+///                 + ((raw[1] as u32) << 16)
+///                 + ((raw[2] as u32) << 8)
+///                 + raw[3] as u32,
+///         )
 ///     }
 /// }
 ///
 /// # let i2c = MockI2c;
 /// #
 /// let mut interface = I2cInterface { i2c, address: 0b0110 };
-/// interface.write_register(ExampleRegister, Value::Option2).unwrap();
+/// interface.write_register(ExampleRegister, Value(0x89abcdef)).unwrap();
 /// let value: Value = interface.read_register(ExampleRegister).unwrap();
-/// assert_eq!(Value::Option2, value);
+/// assert_eq!(Value(0x89abcdef), value);
 /// ```
 #[derive(Debug)]
 pub struct I2cInterface<I2C> {
