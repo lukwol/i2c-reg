@@ -1,6 +1,3 @@
-//! Effortless creation of I2C registers with different sizes
-//! and typesafe conversion between raw bytes and actual values.
-
 #![no_std]
 #![deny(warnings)]
 

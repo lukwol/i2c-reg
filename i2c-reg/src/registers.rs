@@ -20,7 +20,7 @@ use crate::hal::blocking::i2c;
 /// assert_eq!(6, BasicRegister.size());
 /// ```
 pub trait Register {
-    /// Raw type (bytes) of value read or written to register
+    /// Raw type (bytes) of value read from/written to register
     type Raw;
 
     /// Register address
