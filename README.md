@@ -38,6 +38,9 @@ interface.write_register(TemperatureRegister, Temperature(42)).unwrap();
 let temperature: Temperature = interface.read_register(TemperatureRegister).unwrap();
 assert_eq!(Temperature(42), temperature);
 ```
+## Examples
+
+* https://github.com/lukwol/mcp9808
 
 ## License
 
