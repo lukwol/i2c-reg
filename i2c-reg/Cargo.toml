@@ -10,4 +10,4 @@ documentation = "https://docs.rs/i2c-reg"
 
 [dependencies]
 embedded-hal = "0.2.2"
-i2c-reg-derive = { version = "0.1", path = "../i2c-reg-derive" }
+i2c-reg-derive = "0.1"
