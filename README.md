@@ -40,7 +40,7 @@ assert_eq!(Temperature(42), temperature);
 ```
 ## Examples
 
-* https://github.com/lukwol/mcp9808
+* [Temperature sensor driver - MCP9808](https://github.com/lukwol/mcp9808)
 
 ## License
 
