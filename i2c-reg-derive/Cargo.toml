@@ -1,8 +1,12 @@
 [package]
 name = "i2c-reg-derive"
 version = "0.1.0"
-authors = ["lukwol <wolanczyk.lukasz@gmail.com>"]
+authors = ["Łukasz Wolańczyk <wolanczyk.lukasz@gmail.com>"]
 edition = "2018"
+license = "MIT/Apache-2.0"
+description = "Macros for i2c-reg register traits"
+repository = "https://github.com/lukwol/i2c-reg-derive"
+documentation = "https://docs.rs/i2c-reg-derive"
 
 [dependencies]
 syn = "0.15.30"
