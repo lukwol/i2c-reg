@@ -30,7 +30,7 @@ pub trait Register {
     fn size(&self) -> usize;
 }
 
-/// Describes writable I2C register
+/// Describes readable I2C register
 ///
 /// # Example
 /// ```
@@ -64,7 +64,7 @@ pub trait I2cReadRegister<Raw>: Register {
         I2C: i2c::WriteRead<Error = Err>;
 }
 
-/// Describes readable I2C register
+/// Describes writable I2C register
 ///
 /// # Example
 /// ```
