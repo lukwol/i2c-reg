@@ -1,8 +1,12 @@
 [package]
 name = "i2c-reg"
 version = "0.1.0"
-authors = ["lukwol <wolanczyk.lukasz@gmail.com>"]
+authors = ["Łukasz Wolańczyk <wolanczyk.lukasz@gmail.com>"]
 edition = "2018"
+license = "MIT/Apache-2.0"
+description = "Create registers for reading and writing with I2C interface."
+repository = "https://github.com/lukwol/i2c-reg"
+documentation = "https://docs.rs/i2c-reg"
 
 [dependencies]
 embedded-hal = "0.2.2"
