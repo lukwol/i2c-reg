@@ -1,6 +1,8 @@
 # i2c-reg
 Create registers for reading and writing with I2C interface.
 
+## [Documentation](https://docs.rs/i2c-reg)
+
 ## Features
 
 Effortless creation of I2C read only/write only/read write registers with various sizes.
