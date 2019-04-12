@@ -48,23 +48,13 @@ use crate::registers::{I2cReadRegister, I2cWriteRegister};
 ///
 /// impl Into<Raw> for Value {
 ///     fn into(self) -> Raw {
-///         [
-///             (self.0 >> 24) as u8,
-///             (self.0 >> 16) as u8,
-///             (self.0 >> 8) as u8,
-///             self.0 as u8,
-///         ]
+///         self.0.to_be_bytes()
 ///     }
 /// }
 ///
 /// impl From<Raw> for Value {
 ///     fn from(raw: Raw) -> Self {
-///         Value(
-///             ((raw[0] as u32) << 24)
-///                 + ((raw[1] as u32) << 16)
-///                 + ((raw[2] as u32) << 8)
-///                 + raw[3] as u32,
-///         )
+///         Value(u32::from_be_bytes(raw))
 ///     }
 /// }
 ///

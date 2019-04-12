@@ -23,13 +23,13 @@ struct Temperature(u16);
 
 impl Into<Raw> for Temperature {
     fn into(self) -> Raw {
-        [(self.0 >> 8) as u8, self.0 as u8]
+        self.0.to_be_bytes()
     }
 }
 
 impl From<Raw> for Temperature {
     fn from(raw: Raw) -> Self {
-        Temperature(((raw[0] as u16) << 8) + raw[1] as u16)
+        Temperature(u16::from_be_bytes(raw))
     }
 }
 
